@@ -7,8 +7,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "test": "jest --runInBand",
-    "start": "vue-cli-service serve"
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
