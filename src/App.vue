@@ -25,5 +25,6 @@ export default Vue.extend({
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  color: $primary-red;
 }
 </style>
