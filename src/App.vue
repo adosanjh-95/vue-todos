@@ -2,6 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <font-awesome-icon :icon="['fas', 'th-list']" class="icon" />
   </div>
 </template>
 
@@ -26,5 +27,10 @@ export default Vue.extend({
   color: #2c3e50;
   margin-top: 60px;
   color: $primary-red;
+}
+
+.icon {
+  font-size: 2rem;
+  color: lightblue;
 }
 </style>
