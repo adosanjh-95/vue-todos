@@ -1,8 +1,8 @@
 <template>
   <div class="overlay">
     <div class="popup">
-      <form class="form">
-        <label class="form__label" for="title"> Title: </label>
+      <form class="form" @submit.prevent>
+        <label class="form__label" for="title">Title:</label>
         <input
           type="text"
           v-model="title"
@@ -11,7 +11,9 @@
           autocomplete="off"
         />
 
-        <label class="form__label" for="description"> Description: </label>
+        <label class="form__label" for="description">
+          Description (optional):
+        </label>
         <textarea
           v-model="description"
           rows="3"
@@ -86,7 +88,7 @@ export default Vue.extend({
   }),
   computed: {
     isSubmitDisabled() {
-      return !this.title || !this.description || !this.priority;
+      return !this.title || !this.priority;
     },
   },
 });
