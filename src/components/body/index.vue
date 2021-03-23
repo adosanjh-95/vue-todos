@@ -7,17 +7,33 @@
       <font-awesome-icon
         :icon="['fas', 'plus-circle']"
         class="add_note_container__icon"
+        @click="addItem"
       />
     </div>
+    <Popup v-if="showPopup" @cancel="handleCancel" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import Popup from "@/components/popup/index.vue";
+
 export default Vue.extend({
   data: () => ({
     items: [],
+    showPopup: false,
   }),
+  methods: {
+    addItem() {
+      this.showPopup = true;
+    },
+    handleCancel() {
+      this.showPopup = false;
+    },
+  },
+  components: {
+    Popup,
+  },
 });
 </script>
 
@@ -32,12 +48,17 @@ export default Vue.extend({
   align-items: center;
   padding: 1.5rem 1rem;
   justify-content: space-between;
+  text-align: center;
 
   &__intro {
     font-size: 1.25rem;
     color: rgba(0, 0, 0, 0.4);
     margin: 0;
     margin-bottom: 2rem;
+
+    @include desktop {
+      font-size: 1.5rem;
+    }
   }
 
   &__icon {
