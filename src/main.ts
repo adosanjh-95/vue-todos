@@ -12,7 +12,15 @@ library.add(faPlusCircle);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
+// update the local storage store whenever a change is made to the store
+store.subscribe((mutation, state) => {
+  localStorage.setItem("store", JSON.stringify(state));
+});
+
 new Vue({
   store,
   render: (h) => h(App),
+  beforeCreate() {
+    this.$store.commit("initialiseStore");
+  },
 }).$mount("#app");

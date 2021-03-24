@@ -1,33 +1,46 @@
 <template>
   <div class="container">
-    <div v-if="items.length === 0" class="add_note_container">
+    <div v-if="todoItems.length === 0" class="add_note_container">
       <p class="add_note_container__intro">
         Click the button below to start adding your todos
       </p>
-      <font-awesome-icon
-        :icon="['fas', 'plus-circle']"
-        class="add_note_container__icon"
-        @click="addItem"
-      />
     </div>
-    <Popup v-if="showPopup" @cancel="handleCancel" />
+    <div v-if="todoItems.length !== 0">
+      <p>Notes found: {{ todoItems.length }}</p>
+    </div>
+    <font-awesome-icon
+      :icon="['fas', 'plus-circle']"
+      class="add_note_container__icon"
+      @click="addItem"
+    />
+    <Popup v-if="showPopup" @cancel="handleCancel" @submit="handleSubmit" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Popup from "@/components/popup/index.vue";
+import { TodoItemInfo } from "@/store";
+import { mapState } from "vuex";
 
 export default Vue.extend({
   data: () => ({
-    items: [],
     showPopup: false,
   }),
+  computed: {
+    ...mapState(["todoItems"]),
+  },
   methods: {
     addItem() {
       this.showPopup = true;
     },
     handleCancel() {
+      this.showPopup = false;
+    },
+    handleSubmit(item: TodoItemInfo) {
+      this.$store.commit("addItem", {
+        ...item,
+      });
       this.showPopup = false;
     },
   },
@@ -40,6 +53,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .container {
   margin: 1rem;
+  width: 100%;
 }
 
 .add_note_container {

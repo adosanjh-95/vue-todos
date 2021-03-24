@@ -67,7 +67,7 @@
           Cancel
         </button>
         <button
-          @click="$emit('submit')"
+          @click="handleSubmit"
           class="btn btn--primary"
           :disabled="isSubmitDisabled"
         >
@@ -86,6 +86,15 @@ export default Vue.extend({
     description: "",
     priority: "",
   }),
+  methods: {
+    handleSubmit() {
+      this.$emit("submit", {
+        title: this.title,
+        description: this.description,
+        priority: this.priority,
+      });
+    },
+  },
   computed: {
     isSubmitDisabled() {
       return !this.title || !this.priority;
@@ -112,14 +121,17 @@ export default Vue.extend({
   border-radius: 20px;
   background-color: white;
   margin: auto;
-  width: 90%;
   margin-top: 20vh;
   padding: 1.5rem;
   box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+  font-size: 0.8rem;
+  width: 90%;
+  max-width: 25rem;
 
   @include desktop {
     max-width: 30rem;
     padding: 2rem;
+    font-size: 1rem;
   }
 }
 
@@ -139,7 +151,11 @@ export default Vue.extend({
     border-radius: 5px;
     margin-bottom: 0.75rem;
     padding: 0.5rem 0.5rem;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+
+    @include desktop {
+      font-size: 1.1rem;
+    }
   }
 
   &__textarea {
@@ -186,9 +202,11 @@ export default Vue.extend({
     cursor: pointer;
     padding: 0.5rem 1rem;
     border-radius: 5px;
+    font-size: 0.8rem;
 
     @include desktop {
       padding: 0.75rem 1.5rem;
+      font-size: 1rem;
     }
   }
 
@@ -224,9 +242,11 @@ export default Vue.extend({
   cursor: pointer;
   font-size: 1rem;
   border-radius: 5px;
+  font-size: 0.8rem;
 
   @include desktop {
     padding: 1rem 2rem;
+    font-size: 1rem;
   }
 
   &:hover,
