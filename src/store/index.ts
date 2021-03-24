@@ -9,14 +9,14 @@ export enum TodoItemStatus {
   COMPLETED = "Completed",
 }
 
-enum TodoItemPriorities {
+export enum TodoItemPriorities {
   HIGH = "High",
   MEDIUM = "Medium",
   LOW = "Low",
 }
 export interface TodoItemInfo {
   title: string;
-  descriptipn?: string;
+  description?: string;
   priority: TodoItemPriorities;
 }
 export interface TodoItem extends TodoItemInfo {
@@ -34,26 +34,29 @@ const state = {
   todoItems: [],
 };
 
-const getters = {
-  getPendingItems: (state: State) => {
+export const getters = {
+  getPendingItems: (state: State): TodoItem[] => {
     return state.todoItems.filter(
       (item) => item.status === TodoItemStatus.PENDING
     );
   },
-  getCompletedItems: (state: State) => {
+  getCompletedItems: (state: State): TodoItem[] => {
     return state.todoItems.filter(
       (item) => item.status === TodoItemStatus.COMPLETED
     );
   },
 };
 
-const mutations = {
-  initialiseStore(state: State) {
+// COULD MAKE A UTIL TO DO THE UPDATE
+// PROTECT AGAINST ITEM NOT BEING FOUND IN STATE FOR SOME REASON
+
+export const mutations = {
+  initialiseStore(state: State): void {
     if (localStorage.getItem("store")) {
       Object.assign(state, JSON.parse(localStorage.getItem("store") as string));
     }
   },
-  addItem: (state: State, item: TodoItemInfo) => {
+  addItem: (state: State, item: TodoItemInfo): void => {
     state.todoItems.push({
       ...item,
       id: uuidv4(),
@@ -62,17 +65,16 @@ const mutations = {
       completedDate: null,
     });
   },
-  deleteItem: (state: State, id: string) => {
+  deleteItem: (state: State, id: string): void => {
     state.todoItems = state.todoItems.filter((item) => item.id !== id);
   },
   editItem: (
     state: State,
     payload: { id: string; newItemInfo: TodoItemInfo }
-  ) => {
+  ): void => {
     const { id, newItemInfo } = payload;
 
     const index = state.todoItems.findIndex((item) => item.id === id);
-    console.log(index);
 
     const updatedItem = {
       ...state.todoItems[index],
@@ -85,7 +87,7 @@ const mutations = {
       ...state.todoItems.slice(index + 1),
     ];
   },
-  completeItem: (state: State, id: string) => {
+  completeItem: (state: State, id: string): void => {
     const index = state.todoItems.findIndex((item) => item.id === id);
 
     const updatedItem = {
@@ -100,7 +102,7 @@ const mutations = {
       ...state.todoItems.slice(index + 1),
     ];
   },
-  revertItem: (state: State, id: string) => {
+  revertItem: (state: State, id: string): void => {
     const index = state.todoItems.findIndex((item) => item.id === id);
 
     const updatedItem = {
