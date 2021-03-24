@@ -2,6 +2,7 @@
   <div class="todo">
     <span
       :class="`todo__priority todo__priority--${todo.priority.toLowerCase()}`"
+      data-testid="priority-circle"
     />
     <h5 class="todo__title">{{ todo.title }}</h5>
     <p v-if="todo.description" class="todo__description">
@@ -14,14 +15,15 @@
         :icon="action.icon"
         @click="$emit(action.name)"
         :class="`todo__action todo__action--${action.name}`"
+        :data-testid="`${action.name}-icon`"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { TodoItem, TodoItemStatus } from "@/store";
 import Vue, { PropType } from "vue";
+import { TodoItem, TodoItemStatus } from "@/store";
 
 export default Vue.extend({
   props: {
