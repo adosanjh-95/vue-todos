@@ -12,7 +12,7 @@
         v-for="action in getActions"
         :key="action.name"
         :icon="action.icon"
-        @click="$emit(action.name, index)"
+        @click="$emit(action.name)"
         :class="`todo__action todo__action--${action.name}`"
       />
     </div>
@@ -26,7 +26,6 @@ import Vue, { PropType } from "vue";
 export default Vue.extend({
   props: {
     todo: { type: Object as PropType<TodoItem>, required: true },
-    index: { type: Number, required: true },
   },
   computed: {
     getActions() {

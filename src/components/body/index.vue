@@ -7,13 +7,12 @@
     </div>
     <div v-if="todoItems.length !== 0" class="todos_container">
       <Todo
-        v-for="(todo, index) in todoItems"
+        v-for="todo in todoItems"
         :key="String(todo.createdDate)"
         :todo="todo"
-        :index="index"
-        @delete="deleteItem(index)"
-        @complete="completeItem(index)"
-        @revert="revertItem(index)"
+        @delete="deleteItem(todo.id)"
+        @complete="completeItem(todo.id)"
+        @revert="revertItem(todo.id)"
       />
     </div>
     <font-awesome-icon

@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { v4 as uuidv4 } from "uuid";
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ export interface TodoItemInfo {
   priority: TodoItemPriorities;
 }
 export interface TodoItem extends TodoItemInfo {
+  id: string;
   status: TodoItemStatus;
   createdDate: Date;
   completedDate: Date | null;
@@ -54,13 +56,14 @@ const mutations = {
   addItem: (state: State, item: TodoItemInfo) => {
     state.todoItems.push({
       ...item,
+      id: uuidv4(),
       status: TodoItemStatus.PENDING,
       createdDate: new Date(),
       completedDate: null,
     });
   },
-  deleteItem: (state: State, index: number) => {
-    state.todoItems.splice(index, 1);
+  deleteItem: (state: State, id: string) => {
+    state.todoItems = state.todoItems.filter((item) => item.id !== id);
   },
   editItem: (
     state: State,
@@ -73,7 +76,9 @@ const mutations = {
       ...newItemInfo,
     };
   },
-  completeItem: (state: State, index: number) => {
+  completeItem: (state: State, id: string) => {
+    const index = state.todoItems.findIndex((item) => item.id === id);
+
     const updatedItem = {
       ...state.todoItems[index],
       status: TodoItemStatus.COMPLETED,
@@ -86,7 +91,9 @@ const mutations = {
       ...state.todoItems.slice(index + 1),
     ];
   },
-  revertItem: (state: State, index: number) => {
+  revertItem: (state: State, id: string) => {
+    const index = state.todoItems.findIndex((item) => item.id === id);
+
     const updatedItem = {
       ...state.todoItems[index],
       status: TodoItemStatus.PENDING,
