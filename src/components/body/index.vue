@@ -13,6 +13,7 @@
         @delete="deleteItem(todo.id)"
         @complete="completeItem(todo.id)"
         @revert="revertItem(todo.id)"
+        @edit="editItem(todo)"
       />
     </div>
     <font-awesome-icon
@@ -20,8 +21,12 @@
       class="add_note_container__icon"
       @click="addItem"
     />
-    <!-- Could pass index as undefined -->
-    <Popup v-if="showPopup" @cancel="handleCancel" @submit="handleSubmit" />
+    <Popup
+      v-if="showPopup"
+      @cancel="handleCancel"
+      @submit="handleSubmit"
+      v-bind="selectedItem"
+    />
   </div>
 </template>
 
@@ -29,12 +34,13 @@
 import Vue from "vue";
 import Popup from "@/components/popup/index.vue";
 import Todo from "@/components/todo/index.vue";
-import { TodoItemInfo } from "@/store";
+import { TodoItem, TodoItemInfo } from "@/store";
 import { mapMutations, mapState } from "vuex";
 
 export default Vue.extend({
   data: () => ({
     showPopup: false,
+    selectedItem: {},
   }),
   computed: {
     ...mapState(["todoItems"]),
@@ -46,10 +52,22 @@ export default Vue.extend({
     handleCancel() {
       this.showPopup = false;
     },
-    handleSubmit(item: TodoItemInfo) {
-      this.$store.commit("addItem", {
-        ...item,
-      });
+    editItem(item: TodoItem) {
+      this.showPopup = true;
+      this.selectedItem = item;
+    },
+    handleSubmit(newItemInfo: TodoItemInfo, id: string | null) {
+      if (id) {
+        this.$store.commit("editItem", {
+          id,
+          newItemInfo,
+        });
+        this.selectedItem = {}; //reset selected item
+      } else {
+        this.$store.commit("addItem", {
+          ...newItemInfo,
+        });
+      }
       this.showPopup = false;
     },
     ...mapMutations(["deleteItem", "completeItem", "revertItem"]),

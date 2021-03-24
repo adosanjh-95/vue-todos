@@ -83,7 +83,6 @@ export default Vue.extend({
     margin: 0;
     font-size: 1.1rem;
     margin-top: 0.5rem;
-    margin-right: 0.5rem;
 
     @include desktop {
       font-size: 1.3rem;
@@ -95,7 +94,6 @@ export default Vue.extend({
     width: 1.5rem;
     border-radius: 50%;
     display: inline-block;
-    align-self: flex-start;
 
     @include desktop {
       height: 1.75rem;
@@ -119,9 +117,12 @@ export default Vue.extend({
     font-size: 0.8rem;
     margin: 0;
     margin-top: 0.75rem;
+    white-space: pre-wrap;
+    line-height: 1.2rem;
 
     @include desktop {
       font-size: 1rem;
+      line-height: 1.5rem;
     }
   }
 

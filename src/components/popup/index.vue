@@ -5,7 +5,7 @@
         <label class="form__label" for="title">Title:</label>
         <input
           type="text"
-          v-model="title"
+          v-model="todoTitle"
           class="form__input"
           id="title"
           autocomplete="off"
@@ -15,7 +15,7 @@
           Description (optional):
         </label>
         <textarea
-          v-model="description"
+          v-model="todoDescription"
           rows="3"
           class="form__textarea"
           id="description"
@@ -28,7 +28,7 @@
             <input
               type="radio"
               value="High"
-              v-model="priority"
+              v-model="todoPriority"
               class="radio_options__option"
               id="high"
             />
@@ -38,7 +38,7 @@
             <input
               type="radio"
               value="Medium"
-              v-model="priority"
+              v-model="todoPriority"
               class="radio_options__option"
               checked
               id="medium"
@@ -52,7 +52,7 @@
             <input
               type="radio"
               value="Low"
-              v-model="priority"
+              v-model="todoPriority"
               class="radio_options__option"
               id="low"
             />
@@ -80,24 +80,37 @@
 
 <script lang="ts">
 import Vue from "vue";
+
 export default Vue.extend({
-  data: () => ({
-    title: "",
-    description: "",
-    priority: "",
-  }),
+  props: {
+    title: { type: String, default: "" },
+    description: { type: String, default: "" },
+    priority: { type: String, default: "" },
+    id: { type: String, default: null },
+  },
+  data() {
+    return {
+      todoTitle: this.title,
+      todoDescription: this.description,
+      todoPriority: this.priority,
+    };
+  },
   methods: {
     handleSubmit() {
-      this.$emit("submit", {
-        title: this.title,
-        description: this.description,
-        priority: this.priority,
-      });
+      this.$emit(
+        "submit",
+        {
+          title: this.todoTitle,
+          description: this.todoDescription,
+          priority: this.todoPriority,
+        },
+        this.$props.id
+      );
     },
   },
   computed: {
-    isSubmitDisabled() {
-      return !this.title || !this.priority;
+    isSubmitDisabled(): boolean {
+      return !this.todoTitle || !this.todoPriority;
     },
   },
 });

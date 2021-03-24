@@ -67,14 +67,23 @@ const mutations = {
   },
   editItem: (
     state: State,
-    payload: { index: number; newItemInfo: TodoItemInfo }
+    payload: { id: string; newItemInfo: TodoItemInfo }
   ) => {
-    const { index, newItemInfo } = payload;
+    const { id, newItemInfo } = payload;
 
-    state.todoItems[index] = {
+    const index = state.todoItems.findIndex((item) => item.id === id);
+    console.log(index);
+
+    const updatedItem = {
       ...state.todoItems[index],
       ...newItemInfo,
     };
+
+    state.todoItems = [
+      ...state.todoItems.slice(0, index),
+      updatedItem,
+      ...state.todoItems.slice(index + 1),
+    ];
   },
   completeItem: (state: State, id: string) => {
     const index = state.todoItems.findIndex((item) => item.id === id);
@@ -86,7 +95,7 @@ const mutations = {
     };
 
     state.todoItems = [
-      ...state.todoItems.splice(0, index),
+      ...state.todoItems.slice(0, index),
       updatedItem,
       ...state.todoItems.slice(index + 1),
     ];
@@ -101,7 +110,7 @@ const mutations = {
     };
 
     state.todoItems = [
-      ...state.todoItems.splice(0, index),
+      ...state.todoItems.slice(0, index),
       updatedItem,
       ...state.todoItems.slice(index + 1),
     ];
