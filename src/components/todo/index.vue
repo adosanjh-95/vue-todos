@@ -67,12 +67,14 @@ export default Vue.extend({
   box-sizing: border-box;
   border-radius: 20px;
   background-color: white;
-  padding: 1.5rem;
+  padding: 1rem;
   box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
   text-align: center;
   position: relative;
 
   @include desktop {
+    padding: 1.5rem;
+
     &:hover > &__actions {
       display: flex;
     }
@@ -83,6 +85,10 @@ export default Vue.extend({
     font-size: 1.1rem;
     margin-top: 0.5rem;
     margin-right: 0.5rem;
+
+    @include desktop {
+      font-size: 1.3rem;
+    }
   }
 
   &__priority {
@@ -91,6 +97,11 @@ export default Vue.extend({
     border-radius: 50%;
     display: inline-block;
     align-self: flex-start;
+
+    @include desktop {
+      height: 1.75rem;
+      width: 1.75rem;
+    }
 
     &--high {
       background-color: $high-priority;
@@ -109,6 +120,10 @@ export default Vue.extend({
     font-size: 0.8rem;
     margin: 0;
     margin-top: 0.75rem;
+
+    @include desktop {
+      font-size: 1rem;
+    }
   }
 
   &__actions {
@@ -125,6 +140,10 @@ export default Vue.extend({
     margin-right: 1rem;
     font-size: 1.2rem;
     cursor: pointer;
+
+    @include desktop {
+      font-size: 1.5rem;
+    }
 
     &:last-of-type {
       margin-right: 0rem;
