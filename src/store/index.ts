@@ -3,7 +3,7 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-enum TodoItemStatus {
+export enum TodoItemStatus {
   PENDING = "Pending",
   COMPLETED = "Completed",
 }
@@ -18,7 +18,7 @@ export interface TodoItemInfo {
   descriptipn?: string;
   priority: TodoItemPriorities;
 }
-interface TodoItem extends TodoItemInfo {
+export interface TodoItem extends TodoItemInfo {
   status: TodoItemStatus;
   createdDate: Date;
   completedDate: Date | null;
@@ -74,18 +74,30 @@ const mutations = {
     };
   },
   completeItem: (state: State, index: number) => {
-    state.todoItems[index] = {
+    const updatedItem = {
       ...state.todoItems[index],
       status: TodoItemStatus.COMPLETED,
       completedDate: new Date(),
     };
+
+    state.todoItems = [
+      ...state.todoItems.splice(0, index),
+      updatedItem,
+      ...state.todoItems.slice(index + 1),
+    ];
   },
   revertItem: (state: State, index: number) => {
-    state.todoItems[index] = {
+    const updatedItem = {
       ...state.todoItems[index],
       status: TodoItemStatus.PENDING,
       completedDate: null,
     };
+
+    state.todoItems = [
+      ...state.todoItems.splice(0, index),
+      updatedItem,
+      ...state.todoItems.slice(index + 1),
+    ];
   },
 };
 
