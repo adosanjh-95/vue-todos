@@ -48,7 +48,20 @@ export const getters = {
 };
 
 // COULD MAKE A UTIL TO DO THE UPDATE
-// PROTECT AGAINST ITEM NOT BEING FOUND IN STATE FOR SOME REASON
+
+const isValidId = (index: number) => index !== -1;
+
+const updateArrayWithModifiedItem = (
+  currentArray: TodoItem[],
+  modifiedItem: TodoItem,
+  index: number
+): TodoItem[] => {
+  return [
+    ...currentArray.slice(0, index),
+    modifiedItem,
+    ...currentArray.slice(index + 1),
+  ];
+};
 
 export const mutations = {
   initialiseStore(state: State): void {
@@ -76,46 +89,52 @@ export const mutations = {
 
     const index = state.todoItems.findIndex((item) => item.id === id);
 
-    const updatedItem = {
-      ...state.todoItems[index],
-      ...newItemInfo,
-    };
+    if (isValidId(index)) {
+      const updatedItem = {
+        ...state.todoItems[index],
+        ...newItemInfo,
+      };
 
-    state.todoItems = [
-      ...state.todoItems.slice(0, index),
-      updatedItem,
-      ...state.todoItems.slice(index + 1),
-    ];
+      state.todoItems = updateArrayWithModifiedItem(
+        state.todoItems,
+        updatedItem,
+        index
+      );
+    }
   },
   completeItem: (state: State, id: string): void => {
     const index = state.todoItems.findIndex((item) => item.id === id);
 
-    const updatedItem = {
-      ...state.todoItems[index],
-      status: TodoItemStatus.COMPLETED,
-      completedDate: new Date(),
-    };
+    if (isValidId(index)) {
+      const updatedItem = {
+        ...state.todoItems[index],
+        status: TodoItemStatus.COMPLETED,
+        completedDate: new Date(),
+      };
 
-    state.todoItems = [
-      ...state.todoItems.slice(0, index),
-      updatedItem,
-      ...state.todoItems.slice(index + 1),
-    ];
+      state.todoItems = updateArrayWithModifiedItem(
+        state.todoItems,
+        updatedItem,
+        index
+      );
+    }
   },
   revertItem: (state: State, id: string): void => {
     const index = state.todoItems.findIndex((item) => item.id === id);
 
-    const updatedItem = {
-      ...state.todoItems[index],
-      status: TodoItemStatus.PENDING,
-      completedDate: null,
-    };
+    if (isValidId(index)) {
+      const updatedItem = {
+        ...state.todoItems[index],
+        status: TodoItemStatus.PENDING,
+        completedDate: null,
+      };
 
-    state.todoItems = [
-      ...state.todoItems.slice(0, index),
-      updatedItem,
-      ...state.todoItems.slice(index + 1),
-    ];
+      state.todoItems = updateArrayWithModifiedItem(
+        state.todoItems,
+        updatedItem,
+        index
+      );
+    }
   },
 };
 
