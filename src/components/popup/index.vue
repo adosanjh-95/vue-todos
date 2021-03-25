@@ -209,9 +209,6 @@ export default Vue.extend({
   &__label {
     display: inline-block;
     background-color: #ddd;
-    padding: 4px 11px;
-    font-family: Arial;
-    font-size: 16px;
     cursor: pointer;
     padding: 0.5rem 1rem;
     border-radius: 5px;

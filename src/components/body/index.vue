@@ -6,15 +6,60 @@
       </p>
     </div>
     <div v-if="todoItems.length !== 0" class="todos_container">
-      <Todo
-        v-for="todo in todoItems"
-        :key="String(todo.createdDate)"
-        :todo="todo"
-        @delete="deleteItem(todo.id)"
-        @complete="completeItem(todo.id)"
-        @revert="revertItem(todo.id)"
-        @edit="editItem(todo)"
-      />
+      <TabSelector
+        class="tab_selector"
+        :options="{ Pending: 'pending-items', Completed: 'completed-items' }"
+      >
+        <template v-slot:pending-items>
+          <Todo
+            v-for="todo in getPendingItems"
+            :key="String(todo.createdDate)"
+            :todo="todo"
+            @delete="deleteItem(todo.id)"
+            @complete="completeItem(todo.id)"
+            @revert="revertItem(todo.id)"
+            @edit="editItem(todo)"
+          />
+        </template>
+        <template v-slot:completed-items>
+          <Todo
+            v-for="todo in getCompletedItems"
+            :key="String(todo.createdDate)"
+            :todo="todo"
+            @delete="deleteItem(todo.id)"
+            @complete="completeItem(todo.id)"
+            @revert="revertItem(todo.id)"
+            @edit="editItem(todo)"
+          />
+        </template>
+      </TabSelector>
+      <MultiGrid
+        class="multi-grid"
+        :options="{ Pending: 'pending-items', Completed: 'completed-items' }"
+      >
+        <template v-slot:pending-items>
+          <Todo
+            v-for="todo in getPendingItems"
+            :key="String(todo.createdDate)"
+            :todo="todo"
+            @delete="deleteItem(todo.id)"
+            @complete="completeItem(todo.id)"
+            @revert="revertItem(todo.id)"
+            @edit="editItem(todo)"
+          />
+        </template>
+        <template v-slot:completed-items>
+          <Todo
+            v-for="todo in getCompletedItems"
+            :key="String(todo.createdDate)"
+            :todo="todo"
+            @delete="deleteItem(todo.id)"
+            @complete="completeItem(todo.id)"
+            @revert="revertItem(todo.id)"
+            @edit="editItem(todo)"
+          />
+        </template>
+      </MultiGrid>
     </div>
     <font-awesome-icon
       :icon="['fas', 'plus-circle']"
@@ -34,8 +79,10 @@
 import Vue from "vue";
 import Popup from "@/components/popup/index.vue";
 import Todo from "@/components/todo/index.vue";
+import TabSelector from "@/components/tabSelector/index.vue";
+import MultiGrid from "@/components/multiGrid/index.vue";
 import { TodoItem, TodoItemInfo } from "@/store";
-import { mapMutations, mapState } from "vuex";
+import { mapGetters, mapMutations, mapState } from "vuex";
 
 export default Vue.extend({
   data: () => ({
@@ -44,6 +91,7 @@ export default Vue.extend({
   }),
   computed: {
     ...mapState(["todoItems"]),
+    ...mapGetters(["getPendingItems", "getCompletedItems"]),
   },
   methods: {
     addItem() {
@@ -75,6 +123,8 @@ export default Vue.extend({
   components: {
     Popup,
     Todo,
+    TabSelector,
+    MultiGrid,
   },
 });
 </script>
@@ -119,6 +169,20 @@ export default Vue.extend({
     &:hover {
       opacity: 0.5;
     }
+  }
+}
+
+.tab_selector {
+  @include desktop {
+    display: none;
+  }
+}
+
+.multi_grid {
+  display: none;
+
+  @include desktop {
+    display: flex;
   }
 }
 </style>
