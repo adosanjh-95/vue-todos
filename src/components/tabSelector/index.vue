@@ -8,14 +8,15 @@
           v-model="selectedOption"
           class="tab_selector__option"
           :id="key"
-          :key="key"
+          :key="`${key}-input`"
+          :disabled="disableAllTabs"
         />
-        <label class="tab_selector__name" :for="key" :key="key">{{
+        <label class="tab_selector__name" :for="key" :key="`${key}-label`">{{
           key
         }}</label>
       </template>
     </div>
-    <div class="tab_selector__contents">
+    <div class="tab_selector__contents" v-if="$slots[options[selectedOption]]">
       <slot :name="options[selectedOption]" />
     </div>
   </div>
@@ -37,6 +38,11 @@ export default Vue.extend({
   props: {
     options: { type: Object as PropType<Options>, required: true },
   },
+  computed: {
+    disableAllTabs() {
+      return Object.values(this.$slots).every((slot) => !slot);
+    },
+  },
 });
 </script>
 
@@ -56,6 +62,11 @@ export default Vue.extend({
       background-color: $primary-blue;
       opacity: 1;
     }
+
+    &:disabled + .tab_selector__name {
+      background-color: lightgray;
+      cursor: initial;
+    }
   }
 
   &__name {
@@ -63,7 +74,7 @@ export default Vue.extend({
     background-color: $primary-orange;
     cursor: pointer;
     padding: 0.5rem 1rem;
-    font-size: 0.8rem;
+    font-size: 1rem;
     opacity: 0.7;
     flex: 1;
 

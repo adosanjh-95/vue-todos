@@ -4,9 +4,13 @@
       :class="`todo__priority todo__priority--${todo.priority.toLowerCase()}`"
       data-testid="priority-circle"
     />
-    <h5 class="todo__title">{{ todo.title }}</h5>
+    <h5 class="todo__title">
+      <del v-if="!isPending">{{ todo.title }}</del>
+      <template v-else>{{ todo.title }} </template>
+    </h5>
     <p v-if="todo.description" class="todo__description">
-      {{ todo.description }}
+      <del v-if="!isPending">{{ todo.description }}</del>
+      <template v-else>{{ todo.description }} </template>
     </p>
     <div class="todo__actions">
       <font-awesome-icon
@@ -30,8 +34,11 @@ export default Vue.extend({
     todo: { type: Object as PropType<TodoItem>, required: true },
   },
   computed: {
+    isPending(): boolean {
+      return this.todo.status === TodoItemStatus.PENDING;
+    },
     getActions() {
-      if (this.todo.status === TodoItemStatus.PENDING) {
+      if (this.isPending) {
         return [
           {
             name: "edit",
@@ -164,7 +171,7 @@ export default Vue.extend({
     }
 
     &--revert {
-      color: black;
+      color: $primary-blue;
     }
 
     &--complete {

@@ -1,11 +1,18 @@
 <template>
   <div class="container">
-    <div v-if="todoItems.length === 0" class="add_note_container">
-      <p class="add_note_container__intro">
+    <span
+      :class="['add_note', { 'add_note--inline': todosExist }]"
+      @click="addItem"
+    >
+      <p class="add_note__intro" v-if="!todosExist">
         Click the button below to start adding your todos
       </p>
-    </div>
-    <div v-if="todoItems.length !== 0" class="todos_container">
+      <font-awesome-icon
+        :icon="['fas', 'plus-circle']"
+        class="add_note__icon"
+      />
+    </span>
+    <div class="todos_container">
       <TabSelector
         class="tab_selector"
         :options="{ Pending: 'pending-items', Completed: 'completed-items' }"
@@ -36,6 +43,7 @@
       <MultiGrid
         class="multi-grid"
         :options="{ Pending: 'pending-items', Completed: 'completed-items' }"
+        v-if="todosExist"
       >
         <template v-slot:pending-items>
           <Todo
@@ -61,11 +69,6 @@
         </template>
       </MultiGrid>
     </div>
-    <font-awesome-icon
-      :icon="['fas', 'plus-circle']"
-      class="add_note_container__icon"
-      @click="addItem"
-    />
     <Popup
       v-if="showPopup"
       @cancel="handleCancel"
@@ -92,6 +95,9 @@ export default Vue.extend({
   computed: {
     ...mapState(["todoItems"]),
     ...mapGetters(["getPendingItems", "getCompletedItems"]),
+    todosExist() {
+      return this.todoItems.length > 0;
+    },
   },
   methods: {
     addItem() {
@@ -134,37 +140,58 @@ export default Vue.extend({
   margin: 1rem;
   width: 100%;
   text-align: center;
+  position: relative;
 }
 
 .todos_container {
-  > div {
-    margin-bottom: 1rem;
-  }
+  margin-bottom: 3.5rem;
 }
 
-.add_note_container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.5rem 1rem;
-  justify-content: space-between;
-  text-align: center;
+.add_note {
+  border-radius: 50%;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 5;
+  background-color: white;
+
+  @include desktop {
+    position: unset;
+    display: block;
+  }
+
+  &--inline {
+    @include desktop {
+      position: absolute;
+      right: 50%;
+      top: 0;
+      bottom: unset;
+      margin-right: 1rem;
+
+      & > svg {
+        font-size: 2.5rem;
+      }
+    }
+  }
 
   &__intro {
-    font-size: 1.25rem;
-    color: rgba(0, 0, 0, 0.4);
-    margin: 0;
-    margin-bottom: 2rem;
+    display: none;
 
     @include desktop {
+      display: block;
       font-size: 1.5rem;
+      color: rgba(0, 0, 0, 0.4);
     }
   }
 
   &__icon {
     color: $primary-blue;
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     cursor: pointer;
+
+    @include desktop {
+      font-size: 3.5rem;
+    }
 
     &:hover {
       opacity: 0.5;
