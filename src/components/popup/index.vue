@@ -131,7 +131,7 @@ export default Vue.extend({
 
 .popup {
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: $border-radius;
   background-color: white;
   margin: auto;
   margin-top: 20vh;

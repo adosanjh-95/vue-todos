@@ -73,7 +73,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .todo {
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: $border-radius;
   background-color: white;
   padding: 1rem;
   box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
@@ -142,6 +142,15 @@ export default Vue.extend({
 
     @include desktop {
       display: none;
+      position: absolute;
+      background-color: white;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      margin: 0;
+      align-items: center;
+      border-radius: $border-radius;
     }
   }
 
