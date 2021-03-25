@@ -31,10 +31,6 @@ export default Vue.extend({
 .grid {
   flex: 1;
 
-  &:not(:last-of-type) {
-    border-right: 1px solid lightgray;
-  }
-
   &__header {
     font-size: 1.75rem;
     margin: 0;
@@ -43,7 +39,7 @@ export default Vue.extend({
   }
 
   &__contents {
-    padding: 1rem;
+    padding: 1rem 1.75rem;
     display: grid;
     grid-gap: 1rem 1rem;
     grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));

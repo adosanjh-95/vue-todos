@@ -13,58 +13,31 @@
       />
     </span>
     <div class="todos_container">
-      <TabSelector
-        class="tab_selector"
-        :options="{ Pending: 'pending-items', Completed: 'completed-items' }"
-      >
-        <template v-slot:pending-items>
+      <TabSelector class="tab_selector" :options="getOptions">
+        <template
+          v-for="entry in getTodoContent"
+          v-key="entry.name"
+          v-slot:[entry.slotName]
+        >
           <Todo
-            v-for="todo in getPendingItems"
+            v-for="todo in entry.data"
             :key="String(todo.createdDate)"
             :todo="todo"
-            @delete="deleteItem(todo.id)"
-            @complete="completeItem(todo.id)"
-            @revert="revertItem(todo.id)"
-            @edit="editItem(todo)"
-          />
-        </template>
-        <template v-slot:completed-items>
-          <Todo
-            v-for="todo in getCompletedItems"
-            :key="String(todo.createdDate)"
-            :todo="todo"
-            @delete="deleteItem(todo.id)"
-            @complete="completeItem(todo.id)"
-            @revert="revertItem(todo.id)"
-            @edit="editItem(todo)"
+            v-on="getTodoEventListeners"
           />
         </template>
       </TabSelector>
-      <MultiGrid
-        class="multi-grid"
-        :options="{ Pending: 'pending-items', Completed: 'completed-items' }"
-        v-if="todosExist"
-      >
-        <template v-slot:pending-items>
+      <MultiGrid class="multi-grid" :options="getOptions" v-if="todosExist">
+        <template
+          v-for="entry in getTodoContent"
+          v-key="entry.name"
+          v-slot:[entry.slotName]
+        >
           <Todo
-            v-for="todo in getPendingItems"
+            v-for="todo in entry.data"
             :key="String(todo.createdDate)"
             :todo="todo"
-            @delete="deleteItem(todo.id)"
-            @complete="completeItem(todo.id)"
-            @revert="revertItem(todo.id)"
-            @edit="editItem(todo)"
-          />
-        </template>
-        <template v-slot:completed-items>
-          <Todo
-            v-for="todo in getCompletedItems"
-            :key="String(todo.createdDate)"
-            :todo="todo"
-            @delete="deleteItem(todo.id)"
-            @complete="completeItem(todo.id)"
-            @revert="revertItem(todo.id)"
-            @edit="editItem(todo)"
+            v-on="getTodoEventListeners"
           />
         </template>
       </MultiGrid>
@@ -85,7 +58,17 @@ import Todo from "@/components/todo/index.vue";
 import TabSelector from "@/components/tabSelector/index.vue";
 import MultiGrid from "@/components/multiGrid/index.vue";
 import { TodoItem, TodoItemInfo } from "@/store";
-import { mapGetters, mapMutations, mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
+
+interface Options {
+  [key: string]: string;
+}
+
+interface TodoContent {
+  name: string;
+  slotName: string;
+  data: TodoItem[];
+}
 
 export default Vue.extend({
   data: () => ({
@@ -98,6 +81,42 @@ export default Vue.extend({
     todosExist() {
       return this.todoItems.length > 0;
     },
+    getTodoContent(): TodoContent[] {
+      return [
+        {
+          name: "Pending",
+          slotName: "pending-items",
+          data: this.getPendingItems,
+        },
+        {
+          name: "Completed",
+          slotName: "completed-items",
+          data: this.getCompletedItems,
+        },
+      ];
+    },
+    getOptions() {
+      return (this.getTodoContent as TodoContent[]).reduce(
+        (acc: Options, curr: TodoContent) => {
+          return {
+            ...acc,
+            [curr.name]: curr.slotName,
+          };
+        },
+        {}
+      );
+    },
+    getTodoEventListeners() {
+      return {
+        complete: ({ id }: TodoItem) => this.$store.commit("completeItem", id),
+        revert: ({ id }: TodoItem) => this.$store.commit("revertItem", id),
+        delete: ({ id }: TodoItem) => this.$store.commit("deleteItem", id),
+        edit: (item: TodoItem) => {
+          this.showPopup = true;
+          this.selectedItem = item;
+        },
+      };
+    },
   },
   methods: {
     addItem() {
@@ -105,10 +124,7 @@ export default Vue.extend({
     },
     handleCancel() {
       this.showPopup = false;
-    },
-    editItem(item: TodoItem) {
-      this.showPopup = true;
-      this.selectedItem = item;
+      this.selectedItem = {}; //reset selected item
     },
     handleSubmit(newItemInfo: TodoItemInfo, id: string | null) {
       if (id) {
@@ -124,7 +140,6 @@ export default Vue.extend({
       }
       this.showPopup = false;
     },
-    ...mapMutations(["deleteItem", "completeItem", "revertItem"]),
   },
   components: {
     Popup,
@@ -166,7 +181,7 @@ export default Vue.extend({
       right: 50%;
       top: 0;
       bottom: unset;
-      margin-right: 1rem;
+      margin-right: 1.75rem;
 
       & > svg {
         font-size: 2.5rem;

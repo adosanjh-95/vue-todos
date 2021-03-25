@@ -17,7 +17,7 @@
         v-for="action in getActions"
         :key="action.name"
         :icon="action.icon"
-        @click="$emit(action.name)"
+        @click="$emit(action.name, todo)"
         :class="`todo__action todo__action--${action.name}`"
         :data-testid="`${action.name}-icon`"
       />
