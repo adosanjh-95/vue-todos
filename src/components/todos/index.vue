@@ -1,15 +1,14 @@
 <template>
   <div class="container">
-    <span
-      :class="['add_note', { 'add_note--inline': todosExist }]"
-      @click="addItem"
-    >
-      <p class="add_note__intro" v-if="!todosExist">
+    <span :class="['add_todo', { 'add_todo--inline': todosExist }]">
+      <p class="add_todo__intro" v-if="!todosExist">
         Click the button below to start adding your todos
       </p>
       <font-awesome-icon
         :icon="['fas', 'plus-circle']"
-        class="add_note__icon"
+        class="add_todo__icon"
+        @click="addItem"
+        data-testid="add-item-icon"
       />
     </span>
     <div class="todos_container">
@@ -162,7 +161,7 @@ export default Vue.extend({
   margin-bottom: 3.5rem;
 }
 
-.add_note {
+.add_todo {
   border-radius: 50%;
   position: fixed;
   bottom: 1rem;

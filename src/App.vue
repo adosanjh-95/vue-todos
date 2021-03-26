@@ -2,7 +2,7 @@
   <div id="app">
     <Header />
     <main class="main">
-      <Body />
+      <Todos />
     </main>
   </div>
 </template>
@@ -10,13 +10,13 @@
 <script lang="ts">
 import Vue from "vue";
 import Header from "@/components/header/index.vue";
-import Body from "@/components/body/index.vue";
+import Todos from "@/components/todos/index.vue";
 
 export default Vue.extend({
   name: "App",
   components: {
     Header,
-    Body,
+    Todos,
   },
 });
 </script>

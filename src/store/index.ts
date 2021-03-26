@@ -30,7 +30,7 @@ interface State {
   todoItems: TodoItem[];
 }
 
-const state = {
+export const state = {
   todoItems: [],
 };
 
