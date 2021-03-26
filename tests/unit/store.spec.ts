@@ -4,6 +4,7 @@ import {
   TodoItem,
   TodoItemStatus,
   TodoItemPriorities,
+  isValidId,
 } from "@/store/index";
 import { v4 as uuidv4 } from "uuid";
 
@@ -21,6 +22,16 @@ const generateTodoItem = (
   createdDate: new Date(),
   completedDate: type === TodoItemStatus.COMPLETED ? new Date() : null,
   id: uuidv4(),
+});
+
+describe("isValidId", () => {
+  it("returns true for a valid id", () => {
+    expect(isValidId(10)).toEqual(true);
+  });
+
+  it("returns false for an invalid id", () => {
+    expect(isValidId(-1)).toEqual(false);
+  });
 });
 
 describe("getters", () => {
@@ -162,6 +173,25 @@ describe("mutations", () => {
       expect(state.todoItems[1].priority).toEqual(newItemInfo.priority);
       expect(state.todoItems[1].description).toEqual(newItemInfo.description);
     });
+
+    it("does not update the state for a non-existent id", () => {
+      const newItemInfo = {
+        title: "newTitle",
+        description: "newDescription",
+        priority: TodoItemPriorities.HIGH,
+      };
+
+      const state = getState([generateTodoItem(), generateTodoItem()]);
+
+      const originalState = { ...state };
+
+      editItem(state, {
+        id: "12345",
+        newItemInfo,
+      });
+
+      expect(originalState).toEqual(state);
+    });
   });
 
   describe("completeItem", () => {
@@ -176,6 +206,18 @@ describe("mutations", () => {
 
       expect(state.todoItems[1].status).toEqual(TodoItemStatus.COMPLETED);
     });
+
+    it("does not update the state for a non-existent Id", () => {
+      const targetItem = generateTodoItem();
+
+      const state = getState([generateTodoItem(), targetItem]);
+
+      const originalState = { ...state };
+
+      completeItem(state, "1234");
+
+      expect(state).toEqual(originalState);
+    });
   });
 
   describe("revertItem", () => {
@@ -189,6 +231,18 @@ describe("mutations", () => {
       revertItem(state, targetItem.id);
 
       expect(state.todoItems[1].status).toEqual(TodoItemStatus.PENDING);
+    });
+
+    it("does not update the state for a non-existent Id", () => {
+      const targetItem = generateTodoItem(TodoItemStatus.COMPLETED);
+
+      const state = getState([generateTodoItem(), targetItem]);
+
+      const originalState = { ...state };
+
+      revertItem(state, "1234");
+
+      expect(state).toEqual(originalState);
     });
   });
 });

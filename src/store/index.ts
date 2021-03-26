@@ -47,11 +47,9 @@ export const getters = {
   },
 };
 
-// COULD MAKE A UTIL TO DO THE UPDATE
+export const isValidId = (index: number): boolean => index !== -1;
 
-const isValidId = (index: number) => index !== -1;
-
-const updateArrayWithModifiedItem = (
+export const updateArrayWithModifiedItem = (
   currentArray: TodoItem[],
   modifiedItem: TodoItem,
   index: number
