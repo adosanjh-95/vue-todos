@@ -2,7 +2,11 @@
   <div class="multi_grid">
     <div class="grid" v-for="key in Object.keys(options)" :key="key">
       <h3 class="grid__header">{{ key }}</h3>
-      <div class="grid__contents" v-if="!!$slots[options[key]]">
+      <div
+        data-testid="grid-contents"
+        class="grid__contents"
+        v-if="!!$slots[options[key]]"
+      >
         <slot :name="options[key]" />
       </div>
     </div>
