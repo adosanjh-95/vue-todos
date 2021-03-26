@@ -16,7 +16,11 @@
         }}</label>
       </template>
     </div>
-    <div class="tab_selector__contents" v-if="$slots[options[selectedOption]]">
+    <div
+      data-testid="tab-contents"
+      class="tab_selector__contents"
+      v-if="$slots[options[selectedOption]]"
+    >
       <slot :name="options[selectedOption]" />
     </div>
   </div>
