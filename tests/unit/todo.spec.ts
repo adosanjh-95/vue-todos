@@ -14,7 +14,7 @@ const generateTodoItem = (type: TodoItemStatus = TodoItemStatus.PENDING) => ({
 });
 
 describe("todo", () => {
-  it("should render the title and description", () => {
+  it("should render the title and description without del tags for a pending item", () => {
     render(Todo, {
       props: { todo: generateTodoItem() },
       stubs: {
@@ -22,8 +22,20 @@ describe("todo", () => {
       },
     });
 
-    expect(screen.getByText(/title/i)).toBeTruthy();
-    expect(screen.getByText(/description/i)).toBeTruthy();
+    expect(screen.getByText(/title/i).nodeName).not.toEqual("DEL");
+    expect(screen.getByText(/description/i).nodeName).not.toEqual("DEL");
+  });
+
+  it("should render the title and description with del tags for a completed item", () => {
+    render(Todo, {
+      props: { todo: generateTodoItem(TodoItemStatus.COMPLETED) },
+      stubs: {
+        "font-awesome-icon": true,
+      },
+    });
+
+    expect(screen.getByText(/title/i).nodeName).toEqual("DEL");
+    expect(screen.getByText(/description/i).nodeName).toEqual("DEL");
   });
 
   it("should render the priority circle with the correct class based on the priority", () => {
@@ -65,36 +77,44 @@ describe("todo", () => {
   });
 
   it("clicking the edit icon emits the correct event", () => {
-    const { emitted } = render(Todo, { props: { todo: generateTodoItem() } });
+    const todo = generateTodoItem();
+    const { emitted } = render(Todo, { props: { todo } });
 
     fireEvent.click(screen.getByTestId(/edit-icon/i));
 
     expect(emitted()["edit"]).toBeTruthy();
+    expect(emitted()["edit"][0]).toEqual([todo]);
   });
 
   it("clicking the delete icon emits the correct event", () => {
-    const { emitted } = render(Todo, { props: { todo: generateTodoItem() } });
+    const todo = generateTodoItem();
+    const { emitted } = render(Todo, { props: { todo } });
 
     fireEvent.click(screen.getByTestId(/delete-icon/i));
 
     expect(emitted()["delete"]).toBeTruthy();
+    expect(emitted()["delete"][0]).toEqual([todo]);
   });
 
   it("clicking the complete icon emits the correct event", () => {
-    const { emitted } = render(Todo, { props: { todo: generateTodoItem() } });
+    const todo = generateTodoItem();
+    const { emitted } = render(Todo, { props: { todo } });
 
     fireEvent.click(screen.getByTestId(/complete-icon/i));
 
     expect(emitted()["complete"]).toBeTruthy();
+    expect(emitted()["complete"][0]).toEqual([todo]);
   });
 
   it("clicking the revert icon emits the correct event", () => {
+    const todo = generateTodoItem(TodoItemStatus.COMPLETED);
     const { emitted } = render(Todo, {
-      props: { todo: generateTodoItem(TodoItemStatus.COMPLETED) },
+      props: { todo },
     });
 
     fireEvent.click(screen.getByTestId(/revert-icon/i));
 
     expect(emitted()["revert"]).toBeTruthy();
+    expect(emitted()["revert"][0]).toEqual([todo]);
   });
 });
