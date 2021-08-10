@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  vue-todos-app:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    ports:
+      - 8080:8080
+    working_dir: /app
+    container_name: vue-todos-app
+    volumes:
+      - ./:/app
+      - /app/node_modules
